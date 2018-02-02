@@ -73,10 +73,10 @@ func WithBitcoinConnection(fn func(net.Conn, *message.Version)) {
 	errCh := make(chan error)
 
 	go func(conn net.Conn, verackCh chan *message.Verack, versioinCh chan *message.Version, errCh chan error) {
-		var header [24]byte
+		var header [common.MessageHeaderLen]byte
 		recvVerack := false
 		recvVersion := false
-		buf := make([]byte, 24)
+		buf := make([]byte, common.MessageHeaderLen)
 	Loop:
 		for {
 			if recvVerack && recvVersion {
@@ -87,7 +87,7 @@ func WithBitcoinConnection(fn func(net.Conn, *message.Version)) {
 				errCh <- err
 				continue
 			}
-			if n == 24 {
+			if n == common.MessageHeaderLen {
 				copy(header[:], buf)
 				mh := common.DecodeMessageHeader(header)
 				command := string(mh.Command[:])

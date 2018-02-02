@@ -34,7 +34,6 @@ SUBCOMMAND
 	case "show":
 		generateNewBitcoinAddress()
 	case "send":
-		fmt.Println(len(os.Args))
 		if len(os.Args) != 5 {
 			fmt.Println(usage)
 			os.Exit(1)

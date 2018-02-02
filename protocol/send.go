@@ -51,8 +51,8 @@ func Send(toAddr string, amount int, fee int) {
 		)
 		SendMessage(conn, inv)
 
-		var header [24]byte
-		buf := make([]byte, 24)
+		var header [common.MessageHeaderLen]byte
+		buf := make([]byte, common.MessageHeaderLen)
 	Loop:
 		for {
 			n, err := conn.Read(buf)
@@ -60,7 +60,7 @@ func Send(toAddr string, amount int, fee int) {
 				fmt.Println(err.Error())
 				break Loop
 			}
-			if n == 24 {
+			if n == common.MessageHeaderLen {
 				copy(header[:], buf)
 				mh := common.DecodeMessageHeader(header)
 				msgBytes, err := RecvMessage(conn, mh.Length)

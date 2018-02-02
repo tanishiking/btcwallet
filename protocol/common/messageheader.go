@@ -5,6 +5,9 @@ import (
 	"encoding/binary"
 )
 
+// MessageHeaderLen means message header's byte length.
+const MessageHeaderLen = 24
+
 // MessageHeader means messageheader.
 type MessageHeader struct {
 	Magic    uint32
@@ -14,13 +17,13 @@ type MessageHeader struct {
 }
 
 // DecodeMessageHeader decode byte array to messageheader
-func DecodeMessageHeader(b [24]byte) *MessageHeader {
+func DecodeMessageHeader(b [MessageHeaderLen]byte) *MessageHeader {
 	var (
 		command  [12]byte
 		checksum [4]byte
 	)
 	copy(command[:], b[4:16])
-	copy(checksum[:], b[20:24])
+	copy(checksum[:], b[20:MessageHeaderLen])
 	return &MessageHeader{
 		Magic:    binary.LittleEndian.Uint32(b[0:4]),
 		Command:  command,

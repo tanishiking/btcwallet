@@ -224,8 +224,8 @@ Loop:
 }
 
 func dispatch(conn net.Conn, blockCh chan *message.Merkleblock, txCh chan *message.Transaction) {
-	var header [24]byte
-	buf := make([]byte, 24)
+	var header [common.MessageHeaderLen]byte
+	buf := make([]byte, common.MessageHeaderLen)
 	t := time.NewTicker(100 * time.Millisecond)
 Loop:
 	for {
@@ -236,7 +236,7 @@ Loop:
 				fmt.Println(err.Error())
 				break Loop
 			}
-			if n == 24 {
+			if n == common.MessageHeaderLen {
 				copy(header[:], buf)
 				mh := common.DecodeMessageHeader(header)
 				fmt.Printf("Recv: %s %d bytes\n", string(mh.Command[:]), mh.Length)
